@@ -34,50 +34,73 @@ function Login() {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", marginTop: 120 }}>
-      <Card style={{ padding: 30, width: 360 }}>
-        <Typography variant="h5" mb={2}>
-          Login
-        </Typography>
+  <div style={{
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "linear-gradient(135deg, #667eea, #764ba2)"
+  }}>
+    <Card sx={{
+      p: 4,
+      width: 380,
+      borderRadius: 4,
+      boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+      textAlign: "center"
+    }}>
+      
+      <Typography variant="h4" fontWeight="bold" mb={1}>
+        💸 ManageXpense
+      </Typography>
 
-        <TextField
-          label="Email"
-          fullWidth
-          margin="normal"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <Typography variant="body2" color="text.secondary" mb={3}>
+        Track your expenses smartly
+      </Typography>
 
-        <TextField
-          label="Password"
-          type="password"
-          fullWidth
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+      <TextField
+        label="Email"
+        fullWidth
+        margin="normal"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
 
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 2 }}
-          onClick={handleLogin}
-          disabled={loading}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </Button>
+      <TextField
+        label="Password"
+        type="password"
+        fullWidth
+        margin="normal"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
-        <Box textAlign="center" mt={2}>
-          <Typography variant="body2">
-            Don’t have an account?{" "}
-            <Link to="/signup" style={{ color: "#1976d2", fontWeight: "bold" }}>
-              Sign Up
-            </Link>
-          </Typography>
-        </Box>
-      </Card>
-    </div>
-  );
+      <Button
+        variant="contained"
+        fullWidth
+        sx={{
+          mt: 2,
+          py: 1.2,
+          borderRadius: 2,
+          fontWeight: "bold",
+          background: "linear-gradient(to right, #667eea, #764ba2)"
+        }}
+        onClick={handleLogin}
+        disabled={loading}
+      >
+        {loading ? "Logging in..." : "Login"}
+      </Button>
+
+      <Typography mt={2} variant="body2">
+        Don’t have an account?{" "}
+        <Link to="/signup" style={{ fontWeight: "bold", color: "#667eea" }}>
+          Sign Up
+        </Link>
+      </Typography>
+
+    </Card>
+  </div>
+);
+
 }
 
 export default Login;
