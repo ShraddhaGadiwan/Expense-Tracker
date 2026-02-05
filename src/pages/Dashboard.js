@@ -4,6 +4,7 @@ import {
   CardContent,
   Typography,
   Grid,
+  Box,
   Chip,
   LinearProgress,
   Button,
@@ -13,16 +14,18 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import PsychologyIcon from "@mui/icons-material/Psychology";
-import { Box as MUIBox } from "@mui/material";
+
 
 export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
   const [editMode, setEditMode] = useState(false);
   const [tempIncome, setTempIncome] = useState(income || 0);
 
+  // Sync income if updated
   useEffect(() => {
     setTempIncome(income || 0);
   }, [income]);
 
+  // Safe total expenses
   const totalExpenses = useMemo(() => {
     return (expenses || []).reduce(
       (sum, e) => sum + Number(e?.amount || 0),
@@ -30,9 +33,11 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
     );
   }, [expenses]);
 
+  // Safe balance
   const safeIncome = Number(income || 0);
   const balance = safeIncome - totalExpenses;
 
+  // Save income
   const handleSaveIncome = () => {
     const newIncome = Number(tempIncome || 0);
     setIncome(newIncome);
@@ -40,12 +45,14 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
     setEditMode(false);
   };
 
+  // Financial health score
   const healthScore = useMemo(() => {
-    if (!safeIncome) return 0;
+    if (!safeIncome || safeIncome === 0) return 0;
     const ratio = totalExpenses / safeIncome;
     return Math.max(0, Math.round(100 - ratio * 100));
   }, [safeIncome, totalExpenses]);
 
+  // Personality logic
   const personality =
     totalExpenses < safeIncome * 0.5
       ? "Saver 🟢"
@@ -53,6 +60,7 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
       ? "Balanced 🟡"
       : "Big Spender 🔴";
 
+  // Smart suggestion
   let suggestion = "Add income to start tracking";
   if (safeIncome > 0) {
     if (totalExpenses > safeIncome)
@@ -63,21 +71,21 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
   }
 
   return (
-    <MUIBox sx={{ p: { xs: 2, md: 3 }, maxWidth: 1100, mx: "auto" }}>
-      
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
+    <div style={{ marginLeft: 240, padding: 25 }}>
       <Typography variant="h4" fontWeight="bold" mb={3}>
         💳 Financial Overview
       </Typography>
 
       <Grid container spacing={3}>
-        {/* BALANCE */}
+        {/* TOTAL BALANCE */}
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3, background: "#f7f9fc" }}>
             <CardContent>
-              <MUIBox display="flex" alignItems="center" gap={1}>
+              <Box display="flex" alignItems="center" gap={1}>
                 <AccountBalanceWalletIcon color="primary" />
                 <Typography>Total Balance</Typography>
-              </MUIBox>
+              </Box>
               <Typography variant="h5" fontWeight="bold" mt={1}>
                 ₹{balance || 0}
               </Typography>
@@ -85,37 +93,36 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
           </Card>
         </Grid>
 
-        {/* INCOME */}
+        {/* MONTHLY INCOME */}
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3, background: "#f1fdf7" }}>
             <CardContent>
-              <MUIBox display="flex" justifyContent="space-between">
-                <MUIBox display="flex" alignItems="center" gap={1}>
+              <Box display="flex" justifyContent="space-between">
+                <Box display="flex" alignItems="center" gap={1}>
                   <TrendingUpIcon color="success" />
                   <Typography>Monthly Income</Typography>
-                </MUIBox>
+                </Box>
 
                 {!editMode && (
-                  <Button size="small" onClick={() => setEditMode(true)}>
+                  <Button size="small" onClick={(dashboard) => setEditMode(true)}>
                     Edit
                   </Button>
                 )}
-              </MUIBox>
+              </Box>
 
               {editMode || safeIncome === 0 ? (
-                <MUIBox mt={1} display="flex" gap={1}>
+                <Box mt={1} display="flex" gap={1}>
                   <TextField
                     type="number"
                     size="small"
                     placeholder="Enter income"
                     value={tempIncome}
                     onChange={(e) => setTempIncome(e.target.value)}
-                    fullWidth
                   />
                   <Button variant="contained" onClick={handleSaveIncome}>
                     Save
                   </Button>
-                </MUIBox>
+                </Box>
               ) : (
                 <Typography variant="h5" fontWeight="bold" mt={1}>
                   ₹{safeIncome}
@@ -129,10 +136,10 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3, background: "#fff5f5" }}>
             <CardContent>
-              <MUIBox display="flex" alignItems="center" gap={1}>
+              <Box display="flex" alignItems="center" gap={1}>
                 <TrendingDownIcon color="error" />
                 <Typography>Monthly Expenses</Typography>
-              </MUIBox>
+              </Box>
 
               <Typography variant="h5" fontWeight="bold" mt={1}>
                 ₹{totalExpenses || 0}
@@ -147,12 +154,12 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
-              <MUIBox display="flex" alignItems="center" gap={1}>
+              <Box display="flex" alignItems="center" gap={1}>
                 <PsychologyIcon color="primary" />
                 <Typography fontWeight="bold">
                   Financial Health Score
                 </Typography>
-              </MUIBox>
+              </Box>
 
               <Typography variant="h4" fontWeight="bold" mt={1}>
                 {healthScore}/100
@@ -213,7 +220,7 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
           </Typography>
         </CardContent>
       </Card>
-
-    </MUIBox>
-  );
+    </div>
+  
+  </Box>);
 }
