@@ -27,29 +27,23 @@ function Layout() {
   });
 
   return (
-    <div style={{ display: "flex", width: "100%", minHeight: "100vh" }}>
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
       {!hideSidebar && <Sidebar />}
 
       <div
         style={{
           flexGrow: 1,
-          width: "100%",
           padding: "16px",
-          boxSizing: "border-box",
-          overflowX: "hidden",
+          width: "100%",
+          overflowX: "hidden"
         }}
       >
         <Routes>
           <Route path="/dashboard" element={<Dashboard income={income} setIncome={setIncome} expenses={expenses} />} />
-
           <Route path="/add" element={<AddExpense expenses={expenses} setExpenses={setExpenses} />} />
-
           <Route path="/transactions" element={<Transactions expenses={expenses} setExpenses={setExpenses} />} />
-
           <Route path="/analytics" element={<Analytics expenses={expenses} />} />
-
           <Route path="/financial-goals" element={<FinancialGoals income={income} expenses={expenses} />} />
-
           <Route path="/financial-coach" element={<FinancialCoach income={income} expenses={expenses} />} />
 
           <Route path="*" element={<Navigate to="/dashboard" />} />
@@ -58,6 +52,7 @@ function Layout() {
     </div>
   );
 }
+
 
 
 
