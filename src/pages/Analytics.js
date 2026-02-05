@@ -1,82 +1,175 @@
-import { Card, CardContent, Typography, Box } from "@mui/material";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box
+} from "@mui/material";
 
-const COLORS = ["#4caf50", "#2196f3", "#ff9800", "#f44336", "#9c27b0"];
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from "recharts";
 
-export default function Analytics({ expenses = [], budgets = {} }) {
+const COLORS = [
+  "#4caf50",
+  "#2196f3",
+  "#ff9800",
+  "#f44336",
+  "#9c27b0"
+];
 
-  const categories = ["Food", "Transport", "Shopping", "Bills", "Other"];
+export default function Analytics({
+  expenses = [],
+  budgets = {}
+}) {
+  const categories = [
+    "Food",
+    "Transport",
+    "Shopping",
+    "Bills",
+    "Other"
+  ];
 
+  // ================= CATEGORY DATA =================
   const data = categories.map((cat) => {
     const total = expenses
       .filter((e) => e.category === cat)
-      .reduce((sum, e) => sum + Number(e.amount || 0), 0);
+      .reduce(
+        (sum, e) => sum + Number(e.amount || 0),
+        0
+      );
+
     return { name: cat, value: total };
   });
 
-  const totalExpenses = data.reduce((sum, d) => sum + d.value, 0);
+  const totalExpenses = data.reduce(
+    (sum, d) => sum + d.value,
+    0
+  );
 
+  // ================= UI =================
   return (
-    <div style={{ marginLeft: 240, padding: 25 }}>
-      <Typography variant="h4" fontWeight="bold" mb={3}>
+    <Box
+      sx={{
+        ml: { xs: 0, md: "240px" }, // Sidebar only desktop
+        p: { xs: 2, md: 3 }
+      }}
+    >
+      {/* Title */}
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        mb={3}
+      >
         📊 Expense Analytics
       </Typography>
 
-      {/* Pie Chart Section */}
-      <Card sx={{ borderRadius: 3, mb: 3, p: 2 }}>
+      {/* ================= PIE CHART ================= */}
+      <Card
+        sx={{
+          borderRadius: 3,
+          mb: 3,
+          p: { xs: 1, md: 2 }
+        }}
+      >
         <CardContent>
-          <Typography fontWeight="bold" mb={2}>
+          <Typography
+            fontWeight="bold"
+            mb={2}
+          >
             Category Spending Overview
           </Typography>
 
           {totalExpenses > 0 ? (
-            <PieChart width={400} height={300}>
-              <Pie
-                data={data}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label={(entry) => {
-                  const percent = totalExpenses
-                    ? ((entry.value / totalExpenses) * 100).toFixed(1)
-                    : 0;
-                  return `${entry.name}: ₹${entry.value} (${percent}%)`;
-                }}
-              >
-                {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip formatter={(value) => `₹${value}`} />
-              <Legend />
-            </PieChart>
+            <Box width="100%" height={300}>
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={data}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={90}
+                    label={({
+                      name,
+                      value
+                    }) => `₹${value}`}
+                  >
+                    {data.map(
+                      (entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={
+                            COLORS[
+                              index %
+                                COLORS.length
+                            ]
+                          }
+                        />
+                      )
+                    )}
+                  </Pie>
+
+                  <Tooltip
+                    formatter={(v) =>
+                      `₹${v}`
+                    }
+                  />
+
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Box>
           ) : (
             <Typography color="text.secondary">
-              Add expenses to display chart.
+              Add expenses to display
+              chart.
             </Typography>
           )}
 
-          {/* Insights */}
+          {/* ================= INSIGHTS ================= */}
           <Box mt={2}>
             {data.map((cat) => {
               const spent = cat.value;
-              const percent = totalExpenses
-                ? ((spent / totalExpenses) * 100).toFixed(1)
-                : 0;
 
-              const budgetLimit = budgets?.[cat.name] || 0;
-              const overBudget = budgetLimit > 0 && spent > budgetLimit;
+              const percent =
+                totalExpenses
+                  ? (
+                      (spent /
+                        totalExpenses) *
+                      100
+                    ).toFixed(1)
+                  : 0;
+
+              const budgetLimit =
+                budgets?.[cat.name] ||
+                0;
+
+              const overBudget =
+                budgetLimit > 0 &&
+                spent >
+                  budgetLimit;
 
               return (
                 <Typography
                   key={cat.name}
-                  color={overBudget ? "error.main" : "text.primary"}
+                  color={
+                    overBudget
+                      ? "error.main"
+                      : "text.primary"
+                  }
                   sx={{ mt: 1 }}
                 >
-                  {cat.name}: ₹{spent} ({percent}%)
-                  {overBudget ? " ⚠ Over Budget!" : ""}
+                  {cat.name}: ₹
+                  {spent} (
+                  {percent}%)
+                  {overBudget &&
+                    " ⚠ Over Budget!"}
                 </Typography>
               );
             })}
@@ -84,22 +177,37 @@ export default function Analytics({ expenses = [], budgets = {} }) {
         </CardContent>
       </Card>
 
-      {/* Suggestions */}
-      <Card sx={{ borderRadius: 3, p: 2 }}>
+      {/* ================= SUGGESTIONS ================= */}
+      <Card
+        sx={{
+          borderRadius: 3,
+          p: 2
+        }}
+      >
         <CardContent>
-          <Typography fontWeight="bold">💡 Spending Suggestions</Typography>
+          <Typography fontWeight="bold">
+            💡 Spending Suggestions
+          </Typography>
 
-          <Typography mt={1} color="text.secondary">
+          <Typography
+            mt={1}
+            color="text.secondary"
+          >
             {totalExpenses > 0
-              ? totalExpenses > Object.values(budgets || {}).reduce((a, b) => a + b, 0)
+              ? totalExpenses >
+                Object.values(
+                  budgets || {}
+                ).reduce(
+                  (a, b) =>
+                    a + b,
+                  0
+                )
                 ? "⚠ You have exceeded your total budget!"
                 : "Your spending is within limits."
               : "Add expenses to see analytics."}
           </Typography>
-
         </CardContent>
       </Card>
-
-    </div>
+    </Box>
   );
 }
