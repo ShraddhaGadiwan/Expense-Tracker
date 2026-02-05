@@ -27,30 +27,41 @@ function Layout() {
   });
 
   return (
-    <div style={{ display: "flex", width: "100%" }}>
+    <div style={{ display: "flex" }}>
       {!hideSidebar && <Sidebar />}
 
       <div style={{ flex: 1, padding: 20 }}>
         <Routes>
           <Route path="/dashboard" element={<Dashboard income={income} setIncome={setIncome} expenses={expenses} />} />
-
-          <Route path="/add" element={<AddExpense expenses={expenses} setExpenses={setExpenses} />} />
-
-          <Route path="/transactions" element={<Transactions expenses={expenses} setExpenses={setExpenses} />} />
-
+<Route
+  path="/add"
+  element={
+    <AddExpense
+      expenses={expenses}
+      setExpenses={setExpenses}
+    />
+  }
+/>
+<Route
+  path="/transactions"
+  element={
+    <Transactions
+      expenses={expenses}
+      setExpenses={setExpenses}
+    />
+  }
+/>
           <Route path="/analytics" element={<Analytics expenses={expenses} />} />
-
           <Route path="/financial-goals" element={<FinancialGoals income={income} expenses={expenses} />} />
-
           <Route path="/financial-coach" element={<FinancialCoach income={income} expenses={expenses} />} />
 
+          {/* fallback */}
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </div>
     </div>
   );
 }
-
 
 export default function App() {
   return (
