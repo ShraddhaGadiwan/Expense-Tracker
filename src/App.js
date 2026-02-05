@@ -27,15 +27,16 @@ function Layout() {
   });
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div style={{ display: "flex", width: "100%", minHeight: "100vh" }}>
       {!hideSidebar && <Sidebar />}
 
       <div
         style={{
           flexGrow: 1,
-          padding: "20px",
           width: "100%",
-          transition: "0.3s",
+          padding: "16px",
+          boxSizing: "border-box",
+          overflowX: "hidden",
         }}
       >
         <Routes>
@@ -57,6 +58,7 @@ function Layout() {
     </div>
   );
 }
+
 
 
 export default function App() {
