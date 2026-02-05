@@ -1,80 +1,69 @@
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Typography, Box, useMediaQuery } from "@mui/material";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import PieChartIcon from "@mui/icons-material/PieChart";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import SavingsIcon from "@mui/icons-material/EmojiEvents";
+import { Link, useLocation } from "react-router-dom";
 
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import AddExpense from "./pages/AddExpense";
-import Transactions from "./pages/Transactions";
-import Analytics from "./pages/Analytics";
-import FinancialGoals from "./pages/FinancialGoals";
-import FinancialCoach from "./pages/FinancialCoach";
-import Sidebar from "./components/Sidebar";
-
-function Layout() {
+export default function Sidebar() {
   const location = useLocation();
+  const isMobile = useMediaQuery("(max-width:768px)");
 
-  const hideSidebar =
-    location.pathname === "/login" || location.pathname === "/signup";
+  if (location.pathname === "/login" || location.pathname === "/signup") return null;
 
-  const [expenses, setExpenses] = useState(() => {
-    const saved = localStorage.getItem("expenses");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [income, setIncome] = useState(() => {
-    return Number(localStorage.getItem("income")) || 0;
-  });
+  const menuItems = [
+    { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
+    { text: "Add Expense", icon: <AddCircleIcon />, path: "/add" },
+    { text: "Transactions", icon: <ReceiptIcon />, path: "/transactions" },
+    { text: "Analytics", icon: <PieChartIcon />, path: "/analytics" },
+    { text: "Financial Goals", icon: <SavingsIcon />, path: "/financial-goals" },
+    { text: "Financial Coach", icon: <SupportAgentIcon />, path: "/financial-coach" }
+  ];
 
   return (
-    <div style={{ display: "flex" }}>
-      {!hideSidebar && <Sidebar />}
+    <Drawer
+      variant={isMobile ? "temporary" : "permanent"}
+      open={!isMobile}
+      sx={{
+        "& .MuiDrawer-paper": {
+          width: 220,
+          background: "#111827",
+          color: "#fff"
+        }
+      }}
+    >
+      <Box textAlign="center" py={3}>
+        <Typography fontWeight="bold">
+          💳 Expense Tracker
+        </Typography>
+      </Box>
 
-      <div style={{ flex: 1, padding: 20 }}>
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard income={income} setIncome={setIncome} expenses={expenses} />} />
-<Route
-  path="/add"
-  element={
-    <AddExpense
-      expenses={expenses}
-      setExpenses={setExpenses}
-    />
-  }
-/>
-<Route
-  path="/transactions"
-  element={
-    <Transactions
-      expenses={expenses}
-      setExpenses={setExpenses}
-    />
-  }
-/>
-          <Route path="/analytics" element={<Analytics expenses={expenses} />} />
-          <Route path="/financial-goals" element={<FinancialGoals income={income} expenses={expenses} />} />
-          <Route path="/financial-coach" element={<FinancialCoach income={income} expenses={expenses} />} />
-
-          {/* fallback */}
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        </Routes>
-      </div>
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <Router>
-      <Routes>
-        {/* AUTH */}
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-
-        {/* MAIN APP */}
-        <Route path="/*" element={<Layout />} />
-      </Routes>
-    </Router>
+      <List>
+        {menuItems.map((item) => (
+          <ListItem
+            key={item.text}
+            component={Link}
+            to={item.path}
+            sx={{
+              color: "#fff",
+              borderRadius: 2,
+              mx: 1,
+              my: 0.5,
+              backgroundColor: location.pathname === item.path ? "rgba(59,130,246,0.25)" : "transparent",
+              "&:hover": {
+                backgroundColor: "rgba(59,130,246,0.35)"
+              }
+            }}
+          >
+            <ListItemIcon sx={{ color: "#60a5fa" }}>
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText primary={item.text} />
+          </ListItem>
+        ))}
+      </List>
+    </Drawer>
   );
 }
