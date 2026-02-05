@@ -8,24 +8,25 @@ import {
   Chip,
   LinearProgress,
   Button,
-  TextField
+  TextField,
+  useMediaQuery
 } from "@mui/material";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 
-
 export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
+
+  const isMobile = useMediaQuery("(max-width:900px)");
+
   const [editMode, setEditMode] = useState(false);
   const [tempIncome, setTempIncome] = useState(income || 0);
 
-  // Sync income if updated
   useEffect(() => {
     setTempIncome(income || 0);
   }, [income]);
 
-  // Safe total expenses
   const totalExpenses = useMemo(() => {
     return (expenses || []).reduce(
       (sum, e) => sum + Number(e?.amount || 0),
@@ -33,11 +34,9 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
     );
   }, [expenses]);
 
-  // Safe balance
   const safeIncome = Number(income || 0);
   const balance = safeIncome - totalExpenses;
 
-  // Save income
   const handleSaveIncome = () => {
     const newIncome = Number(tempIncome || 0);
     setIncome(newIncome);
@@ -45,14 +44,12 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
     setEditMode(false);
   };
 
-  // Financial health score
   const healthScore = useMemo(() => {
-    if (!safeIncome || safeIncome === 0) return 0;
+    if (!safeIncome) return 0;
     const ratio = totalExpenses / safeIncome;
     return Math.max(0, Math.round(100 - ratio * 100));
   }, [safeIncome, totalExpenses]);
 
-  // Personality logic
   const personality =
     totalExpenses < safeIncome * 0.5
       ? "Saver 🟢"
@@ -60,7 +57,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
       ? "Balanced 🟡"
       : "Big Spender 🔴";
 
-  // Smart suggestion
   let suggestion = "Add income to start tracking";
   if (safeIncome > 0) {
     if (totalExpenses > safeIncome)
@@ -71,14 +67,19 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
   }
 
   return (
-    <Box sx={{ p: { xs: 2, md: 3 } }}>
-    <div style={{ marginLeft: 240, padding: 25 }}>
+    <Box
+      sx={{
+        padding: { xs: 2, md: 3 },
+        marginLeft: { xs: 0, md: "220px" }, // sidebar spacing only on desktop
+        transition: "0.3s"
+      }}
+    >
+
       <Typography variant="h4" fontWeight="bold" mb={3}>
         💳 Financial Overview
       </Typography>
 
       <Grid container spacing={3}>
-        {/* TOTAL BALANCE */}
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3, background: "#f7f9fc" }}>
             <CardContent>
@@ -93,7 +94,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
           </Card>
         </Grid>
 
-        {/* MONTHLY INCOME */}
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3, background: "#f1fdf7" }}>
             <CardContent>
@@ -104,7 +104,7 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
                 </Box>
 
                 {!editMode && (
-                  <Button size="small" onClick={(dashboard) => setEditMode(true)}>
+                  <Button size="small" onClick={() => setEditMode(true)}>
                     Edit
                   </Button>
                 )}
@@ -132,7 +132,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
           </Card>
         </Grid>
 
-        {/* EXPENSES */}
         <Grid item xs={12} md={4}>
           <Card sx={{ borderRadius: 3, background: "#fff5f5" }}>
             <CardContent>
@@ -149,7 +148,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
         </Grid>
       </Grid>
 
-      {/* HEALTH SCORE */}
       <Grid container spacing={3} mt={2}>
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 3 }}>
@@ -182,7 +180,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
           </Card>
         </Grid>
 
-        {/* PERSONALITY */}
         <Grid item xs={12} md={6}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
@@ -208,7 +205,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
         </Grid>
       </Grid>
 
-      {/* SMART COACH */}
       <Card sx={{ mt: 3, borderRadius: 3 }}>
         <CardContent>
           <Typography fontWeight="bold">
@@ -220,7 +216,7 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
           </Typography>
         </CardContent>
       </Card>
-    </div>
-  
-  </Box>);
+
+    </Box>
+  );
 }

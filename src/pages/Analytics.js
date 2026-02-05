@@ -3,11 +3,10 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 const COLORS = ["#4caf50", "#2196f3", "#ff9800", "#f44336", "#9c27b0"];
 
-export default function Analytics({ expenses, budgets }) {
-  // Category list
+export default function Analytics({ expenses = [], budgets = {} }) {
+
   const categories = ["Food", "Transport", "Shopping", "Bills", "Other"];
 
-  // Calculate category-wise totals
   const data = categories.map((cat) => {
     const total = expenses
       .filter((e) => e.category === cat)
@@ -30,39 +29,53 @@ export default function Analytics({ expenses, budgets }) {
             Category Spending Overview
           </Typography>
 
-          <PieChart width={400} height={300}>
-            <Pie
-              data={data}
-              dataKey="value"
-              nameKey="name"
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              label={(entry) =>
-                `${entry.name}: ₹${entry.value} (${((entry.value / totalExpenses) * 100 || 0).toFixed(1)}%)`
-              }
-            >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip formatter={(value) => `₹${value}`} />
-            <Legend />
-          </PieChart>
+          {totalExpenses > 0 ? (
+            <PieChart width={400} height={300}>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                label={(entry) => {
+                  const percent = totalExpenses
+                    ? ((entry.value / totalExpenses) * 100).toFixed(1)
+                    : 0;
+                  return `${entry.name}: ₹${entry.value} (${percent}%)`;
+                }}
+              >
+                {data.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value) => `₹${value}`} />
+              <Legend />
+            </PieChart>
+          ) : (
+            <Typography color="text.secondary">
+              Add expenses to display chart.
+            </Typography>
+          )}
 
           {/* Insights */}
           <Box mt={2}>
             {data.map((cat) => {
               const spent = cat.value;
-              const percent = totalExpenses ? ((spent / totalExpenses) * 100).toFixed(1) : 0;
-              const overBudget = budgets && budgets[cat.name] && spent > budgets[cat.name];
+              const percent = totalExpenses
+                ? ((spent / totalExpenses) * 100).toFixed(1)
+                : 0;
+
+              const budgetLimit = budgets?.[cat.name] || 0;
+              const overBudget = budgetLimit > 0 && spent > budgetLimit;
+
               return (
                 <Typography
                   key={cat.name}
                   color={overBudget ? "error.main" : "text.primary"}
                   sx={{ mt: 1 }}
                 >
-                  {cat.name}: ₹{spent} ({percent}% of total spending)
+                  {cat.name}: ₹{spent} ({percent}%)
                   {overBudget ? " ⚠ Over Budget!" : ""}
                 </Typography>
               );
@@ -71,20 +84,22 @@ export default function Analytics({ expenses, budgets }) {
         </CardContent>
       </Card>
 
-      {/* Existing Analytics content goes here */}
-      {/* Example: Total Expenses, Suggestions, etc. */}
+      {/* Suggestions */}
       <Card sx={{ borderRadius: 3, p: 2 }}>
         <CardContent>
           <Typography fontWeight="bold">💡 Spending Suggestions</Typography>
+
           <Typography mt={1} color="text.secondary">
             {totalExpenses > 0
-              ? totalExpenses > Object.values(budgets || {}).reduce((a,b)=>a+b,0)
+              ? totalExpenses > Object.values(budgets || {}).reduce((a, b) => a + b, 0)
                 ? "⚠ You have exceeded your total budget!"
                 : "Your spending is within limits."
               : "Add expenses to see analytics."}
           </Typography>
+
         </CardContent>
       </Card>
+
     </div>
   );
 }
