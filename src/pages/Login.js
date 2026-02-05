@@ -39,7 +39,7 @@ function Login() {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #e8f5e9, #c8e6c9)"
+    background: "#f9fafb"
   }}>
     <Card sx={{
       p: 4,
