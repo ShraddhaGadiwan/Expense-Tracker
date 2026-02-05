@@ -1,15 +1,4 @@
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Box,
-  IconButton,
-  useMediaQuery
-} from "@mui/material";
-
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Typography, Box, IconButton, useMediaQuery } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import ReceiptIcon from "@mui/icons-material/Receipt";
@@ -17,11 +6,8 @@ import PieChartIcon from "@mui/icons-material/PieChart";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import SavingsIcon from "@mui/icons-material/EmojiEvents";
 import MenuIcon from "@mui/icons-material/Menu";
-
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-
-const drawerWidth = 220;
 
 export default function Sidebar() {
   const location = useLocation();
@@ -47,7 +33,7 @@ export default function Sidebar() {
       {isMobile && (
         <IconButton
           onClick={() => setOpen(true)}
-          sx={{ position: "fixed", top: 15, left: 15, zIndex: 1400, color: "#1e3c72" }}
+          sx={{ position: "fixed", top: 15, left: 15, zIndex: 1300 }}
         >
           <MenuIcon />
         </IconButton>
@@ -58,11 +44,8 @@ export default function Sidebar() {
         open={isMobile ? open : true}
         onClose={() => setOpen(false)}
         sx={{
-          width: drawerWidth,
-          flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
+            width: 220,
             background: "linear-gradient(180deg, #1e3c72, #2a5298)",
             color: "#fff"
           }
@@ -86,18 +69,15 @@ export default function Sidebar() {
                 borderRadius: 2,
                 mx: 1,
                 my: 0.5,
-                backgroundColor:
-                  location.pathname === item.path
-                    ? "rgba(255,255,255,0.15)"
-                    : "transparent",
-                transition: "0.25s",
+                backgroundColor: location.pathname === item.path ? "rgba(255,255,255,0.15)" : "transparent",
+                transition: "0.3s",
                 "&:hover": {
                   backgroundColor: "rgba(255,255,255,0.25)",
-                  transform: "translateX(4px)"
+                  transform: "translateX(6px)"
                 }
               }}
             >
-              <ListItemIcon sx={{ color: "#fff", minWidth: 38 }}>
+              <ListItemIcon sx={{ color: "#fff" }}>
                 {item.icon}
               </ListItemIcon>
               <ListItemText primary={item.text} />
