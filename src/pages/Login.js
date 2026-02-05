@@ -82,7 +82,7 @@ function Login() {
           py: 1.2,
           borderRadius: 2,
           fontWeight: "bold",
-          background: "linear-gradient(to right, #667eea, #764ba2)"
+          background: "linear-gradient(135deg, #f5f7fa, #c3cfe2)"
         }}
         onClick={handleLogin}
         disabled={loading}
