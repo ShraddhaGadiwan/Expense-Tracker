@@ -6,11 +6,14 @@ import {
   Box,
   LinearProgress,
   Chip,
-  Divider
+  Divider,
+  useMediaQuery
 } from "@mui/material";
 import PsychologyIcon from "@mui/icons-material/Psychology";
 
 export default function FinancialCoach({ income, expenses }) {
+
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   const totalExpenses = useMemo(
     () => expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0),
@@ -27,7 +30,6 @@ export default function FinancialCoach({ income, expenses }) {
     ? 0
     : Math.max(0, Math.round(100 - spendingRate));
 
-  // 🧠 Coach Intelligence
   let coachMood = "Neutral";
   let coachMessage = "";
   let investmentTip = "";
@@ -54,13 +56,18 @@ export default function FinancialCoach({ income, expenses }) {
   }
 
   return (
-    <div style={{ marginLeft: 240, padding: 25 }}>
+    <Box
+      sx={{
+        padding: { xs: 2, md: 3 },
+        marginLeft: { xs: 0, md: "220px" }, // sidebar space only on desktop
+        transition: "0.3s"
+      }}
+    >
 
       <Typography variant="h4" fontWeight="bold" mb={3}>
         🧠 Financial Coach
       </Typography>
 
-      {/* HEALTH SCORE */}
       <Card sx={{ mb: 3, borderRadius: 3 }}>
         <CardContent>
           <Box display="flex" alignItems="center" gap={1}>
@@ -86,7 +93,6 @@ export default function FinancialCoach({ income, expenses }) {
         </CardContent>
       </Card>
 
-      {/* AI COACH */}
       <Card sx={{ mb: 3, borderRadius: 3 }}>
         <CardContent>
           <Typography fontWeight="bold">🤖 AI Financial Coach</Typography>
@@ -110,7 +116,6 @@ export default function FinancialCoach({ income, expenses }) {
         </CardContent>
       </Card>
 
-      {/* INVESTMENT ROADMAP */}
       <Card sx={{ mb: 3, borderRadius: 3 }}>
         <CardContent>
           <Typography fontWeight="bold">
@@ -123,7 +128,6 @@ export default function FinancialCoach({ income, expenses }) {
         </CardContent>
       </Card>
 
-      {/* MONTHLY ACTION PLAN */}
       <Card sx={{ borderRadius: 3 }}>
         <CardContent>
           <Typography fontWeight="bold">
@@ -138,6 +142,6 @@ export default function FinancialCoach({ income, expenses }) {
         </CardContent>
       </Card>
 
-    </div>
+    </Box>
   );
 }
