@@ -14,6 +14,14 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import PsychologyIcon from "@mui/icons-material/Psychology";
+import { Box } from "@mui/material";
+
+return (
+  <Box sx={{ p: { xs: 2, md: 3 } }}>
+    {/* your existing dashboard UI here */}
+  </Box>
+);
+
 
 export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
   const [editMode, setEditMode] = useState(false);
@@ -70,6 +78,7 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
   }
 
   return (
+    <Box sx={{ p: { xs: 2, md: 3 } }}>
     <div style={{ marginLeft: 240, padding: 25 }}>
       <Typography variant="h4" fontWeight="bold" mb={3}>
         💳 Financial Overview
@@ -219,5 +228,6 @@ export default function Dashboard({ income = 0, setIncome, expenses = [] }) {
         </CardContent>
       </Card>
     </div>
-  );
+  
+  </Box>);
 }

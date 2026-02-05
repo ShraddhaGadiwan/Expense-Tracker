@@ -38,19 +38,19 @@ function Signup() {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f9fafb"
-      }}
-    >
+    <div style={{ 
+  display: "flex", 
+  justifyContent: "center", 
+  alignItems: "center",
+  minHeight: "100vh",
+  padding: 16
+}}>
+
       <Card
         style={{
           padding: 34,
-          width: 380,
+          width: "100%",
+          maxWidth: 380,
           borderRadius: 16,
           boxShadow: "0 8px 25px rgba(0,0,0,0.08)"
         }}

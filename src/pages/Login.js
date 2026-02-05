@@ -34,16 +34,18 @@ function Login() {
   };
 
   return (
-  <div style={{
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f9fafb"
-  }}>
+  <div style={{ 
+  display: "flex", 
+  justifyContent: "center", 
+  alignItems: "center",
+  minHeight: "100vh",
+  padding: 16
+}}>
+
     <Card sx={{
       p: 4,
-      width: 380,
+      width: "100%",
+      maxWidth: 380,
       borderRadius: 4,
       boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
       textAlign: "center"
