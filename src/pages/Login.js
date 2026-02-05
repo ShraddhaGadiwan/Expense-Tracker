@@ -39,7 +39,7 @@ function Login() {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #667eea, #764ba2)"
+    background: "linear-gradient(135deg, #e8f5e9, #c8e6c9)"
   }}>
     <Card sx={{
       p: 4,
@@ -82,7 +82,7 @@ function Login() {
           py: 1.2,
           borderRadius: 2,
           fontWeight: "bold",
-          background: "linear-gradient(135deg, #f5f7fa, #c3cfe2)"
+          background: "linear-gradient(to right, #667eea, #764ba2)"
         }}
         onClick={handleLogin}
         disabled={loading}
